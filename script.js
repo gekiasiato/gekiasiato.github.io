@@ -14,19 +14,21 @@
 
   const S = SITE;
   const $ = (id) => document.getElementById(id);
+  const root = document.documentElement;
+  const list = (arr) => Array.isArray(arr) ? arr : [];
+  const pad = (n) => String(n).padStart(2, "0");
+  const DOTS = ["var(--c-green)", "var(--c-yellow)", "var(--c-orange)", "var(--c-pink)", "var(--c-sky)"];
+  const ext = 'target="_blank" rel="noopener"';
 
   /* 確認モード：検索エンジンに載せない＋上部に案内を表示 */
   if (S.previewMode) {
     const m = document.createElement("meta");
     m.name = "robots"; m.content = "noindex, nofollow";
     document.head.appendChild(m);
-    document.documentElement.classList.add("is-preview");
+    root.classList.add("is-preview");
     document.body.insertAdjacentHTML("afterbegin",
       '<div class="preview-bar">公開前の確認用ページです（部外秘）</div>');
   }
-  const list = (arr) => Array.isArray(arr) ? arr : [];
-  const pad = (n) => String(n).padStart(2, "0");
-  const DOTS = ["var(--c-green)", "var(--c-yellow)", "var(--c-orange)", "var(--c-pink)", "var(--c-sky)"];
 
   /* data-bind="a.b" → S.a.b を差し込む */
   document.querySelectorAll("[data-bind]").forEach((el) => {
@@ -34,12 +36,22 @@
     el.innerHTML = v || "";
   });
 
+  /* トップの写真（なければロゴ） */
+  if (S.heroPhoto) {
+    const hv = $("hero-visual");
+    hv.innerHTML = `<img class="hero-photo" src="images/${S.heroPhoto}" alt="劇団あしあとの舞台写真">`;
+    hv.removeAttribute("aria-hidden");
+    root.classList.add("has-hero-photo");
+  }
+
   /* 劇団について */
   if (S.about) {
+    const ab = S.about;
     $("about-text").innerHTML =
-      `<p class="lead">${S.about.lead || ""}</p>` +
-      list(S.about.body).map((p) => `<p>${p}</p>`).join("");
-    $("about-points").innerHTML = list(S.about.points).map((p, i) => `
+      `<p class="lead">${ab.lead || ""}</p>` +
+      list(ab.body).map((p) => `<p>${p}</p>`).join("") +
+      (ab.photo ? `<figure class="about-photo"><img src="images/${ab.photo}" alt="${ab.photoCaption || "劇団あしあとの活動の様子"}" loading="lazy">${ab.photoCaption ? `<figcaption>${ab.photoCaption}</figcaption>` : ""}</figure>` : "");
+    $("about-points").innerHTML = list(ab.points).map((p, i) => `
       <li>
         <span class="num" style="--dot:${DOTS[i % DOTS.length]}">${pad(i + 1)}</span>
         <div><h3>${p.title}</h3><p>${p.text}</p></div>
@@ -50,17 +62,17 @@
   const ns = S.nextStage || {};
   if (ns.show) {
     const btn = ns.reserveUrl
-      ? `<a href="${ns.reserveUrl}" class="btn btn-primary" target="_blank" rel="noopener">ご予約はこちら</a>`
+      ? `<a href="${ns.reserveUrl}" class="btn btn-primary" ${ext}>ご予約はこちら（無料）</a>`
       : `<span class="btn btn-disabled">ご予約受付は準備中です</span>`;
     const row = (k, v) => v ? `<div><dt>${k}</dt><dd>${v}</dd></div>` : "";
     const place = ns.place
-      ? ns.place + (ns.mapUrl ? `<br><a class="map-link" href="${ns.mapUrl}" target="_blank" rel="noopener">Google マップで見る ↗</a>` : "")
+      ? ns.place + (ns.mapUrl ? `<br><a class="map-link" href="${ns.mapUrl}" ${ext}>Google マップで見る ↗</a>` : "")
       : "";
     const flyers = [ns.flyer, ns.flyerBack].filter(Boolean);
     const visual = ns.flyer
       ? `<figure class="stage-visual">
-           <a href="images/${ns.flyer}" target="_blank" rel="noopener" class="flyer-main"><img src="images/${ns.flyer}" alt="公演フライヤー（表）"></a>
-           ${flyers.length > 1 ? `<figcaption class="flyer-links">${flyers.map((f, i) => `<a href="images/${f}" target="_blank" rel="noopener">${i === 0 ? "表面" : "裏面"}を拡大</a>`).join("")}</figcaption>` : ""}
+           <a href="images/${ns.flyer}" ${ext} class="flyer-main"><img src="images/${ns.flyer}" alt="公演フライヤー（表）"></a>
+           ${flyers.length > 1 ? `<figcaption class="flyer-links">${flyers.map((f, i) => `<a href="images/${f}" ${ext}>${i === 0 ? "表面" : "裏面"}を拡大</a>`).join("")}</figcaption>` : ""}
          </figure>`
       : `<figure class="stage-visual no-flyer"><img src="images/logo.webp" alt=""><figcaption>Coming Soon</figcaption></figure>`;
     $("next-stage").innerHTML = `
@@ -70,6 +82,7 @@
           <p class="stage-type">${ns.type || ""}</p>
           <h3 class="stage-title">${ns.title || ""}</h3>
           <p class="stage-credit">${ns.credit || ""}</p>
+          <div class="stage-cta-top">${btn}</div>
           ${ns.quote ? `<blockquote class="stage-quote">「${ns.quote}」</blockquote>` : ""}
           <dl class="stage-info">
             ${row("日時", ns.date || "未定")}
@@ -97,6 +110,7 @@
       </span>
       <span class="hn-cta">${ns.reserveUrl ? "公演情報・ご予約" : "公演情報を見る"}<span aria-hidden="true">→</span></span>`;
     hn.hidden = false;
+    root.classList.add("has-next");
   } else {
     $("next-stage").innerHTML = `
       <div class="stage-empty reveal">
@@ -104,10 +118,17 @@
       </div>`;
   }
 
-  $("past-list").innerHTML = list(S.pastStages).length
-    ? list(S.pastStages).map((p) => `
-      <li class="reveal"><span class="past-date">${p.date}</span><span class="past-name">${p.title}</span><span class="past-tag">${p.tag || ""}</span></li>`).join("")
-    : `<li class="past-empty">過去の公演は順次追加していきます。</li>`;
+  /* 過去の公演（なければ見出しごと隠す） */
+  const past = list(S.pastStages);
+  if (past.length) {
+    const anyPhoto = past.some((p) => p.photo);  // 1枚でもあれば全行に写真枠を付けて列をそろえる
+    $("past-list").innerHTML = past.map((p) => `
+      <li class="reveal ${anyPhoto ? "has-photo" : ""}">
+        ${p.photo ? `<img class="past-photo" src="images/${p.photo}" alt="${p.title || ""}の舞台写真" loading="lazy">` : (anyPhoto ? `<span class="past-photo past-photo-empty"></span>` : "")}
+        <span class="past-date">${p.date || ""}</span><span class="past-name">${p.title || ""}</span><span class="past-tag">${p.tag || ""}</span>
+      </li>`).join("");
+    $("past").hidden = false;
+  }
 
   /* お知らせ */
   const CAT = { "お知らせ": "cat-info", "公演": "cat-stage", "募集": "cat-join" };
@@ -116,7 +137,7 @@
 
   /* 活動内容 */
   const a = S.activity || {};
-  $("activity-basic").innerHTML = [["活動日", a.day], ["時間", a.time], ["場所", a.place], ["部員数", a.members]]
+  $("activity-basic").innerHTML = [["活動日", a.day], ["時間", a.time], ["場所", a.place], ["団員数", a.members]]
     .filter(([, v]) => v)
     .map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("");
 
@@ -127,28 +148,31 @@
   const j = S.join || {};
   $("join-faq").innerHTML = list(j.faq).map((f) => `
     <div><dt>${f.q}</dt><dd>${f.a}</dd></div>`).join("");
-  const jb = $("join-btn");
-  if (j.buttonText) jb.textContent = j.buttonText;
-  if (j.formUrl) { jb.href = j.formUrl; jb.target = "_blank"; jb.rel = "noopener"; }
+  let jb = "";
+  if (j.formUrl) jb += `<a href="${j.formUrl}" class="btn btn-primary" ${ext}>${j.formText || "フォームで申し込む"}</a>`;
+  if (j.dmUrl) jb += `<a href="${j.dmUrl}" class="btn ${j.formUrl ? "btn-line" : "btn-primary"}" ${ext}>${j.dmText || "InstagramのDMで申し込む"}</a>`;
+  if (!jb) jb = `<a href="#contact" class="btn btn-primary">見学・体験を申し込む</a>`;
+  $("join-actions").innerHTML = jb;
 
-  /* お問い合わせ */
+  /* お問い合わせ・フッターのSNS */
   const c = S.contact || {};
-  const item = (href, name, sub, ext) => `
-    <li class="reveal"><a href="${href}" ${ext ? 'target="_blank" rel="noopener"' : ""}>
-      <span class="ct-name">${name}</span><span class="ct-id">${sub}</span><span class="ct-arrow" aria-hidden="true">${ext ? "↗" : "→"}</span>
-    </a></li>`;
-  let ch = "";
-  if (c.instagram && c.instagram.url) ch += item(c.instagram.url, "Instagram", c.instagram.id, true);
-  if (c.x && c.x.url) ch += item(c.x.url, "X", c.x.id, true);
-  if (c.note && c.note.url) ch += item(c.note.url, "note", c.note.id, true);
-  if (c.email) ch += item(`mailto:${c.email}`, "Mail", c.email, false);
-  $("contact-grid").innerHTML = ch;
+  const links = [];
+  if (c.instagram && c.instagram.url) links.push({ href: c.instagram.url, name: "Instagram", sub: c.instagram.id, out: true });
+  if (c.x && c.x.url) links.push({ href: c.x.url, name: "X", sub: c.x.id, out: true });
+  if (c.note && c.note.url) links.push({ href: c.note.url, name: "note", sub: c.note.id, out: true });
+  if (c.email) links.push({ href: `mailto:${c.email}`, name: "Mail", sub: c.email, out: false });
+  $("contact-grid").innerHTML = links.map((l) => `
+    <li class="reveal"><a href="${l.href}" ${l.out ? ext : ""}>
+      <span class="ct-name">${l.name}</span><span class="ct-id">${l.sub}</span><span class="ct-arrow" aria-hidden="true">${l.out ? "↗" : "→"}</span>
+    </a></li>`).join("");
+  $("footer-sns").innerHTML = links.map((l) => `
+    <li><a href="${l.href}" ${l.out ? ext : ""}>${l.name}</a></li>`).join("");
 
   $("year").textContent = new Date().getFullYear();
 
-  /* ---------- 演出 ---------- */
+  /* ---------- 演出・操作 ---------- */
 
-  /* 歩く足あと */
+  /* 歩くあしあと */
   const trail = $("footsteps-trail");
   if (trail) {
     let html = "";
@@ -162,21 +186,35 @@
   /* スマホメニュー */
   const toggle = document.querySelector(".nav-toggle");
   const nav = $("nav");
-  toggle.addEventListener("click", () => {
-    const open = toggle.getAttribute("aria-expanded") === "true";
-    toggle.setAttribute("aria-expanded", String(!open));
-    toggle.setAttribute("aria-label", open ? "メニューを開く" : "メニューを閉じる");
-    nav.classList.toggle("open", !open);
-  });
-  nav.querySelectorAll("a").forEach((l) => l.addEventListener("click", () => {
-    toggle.setAttribute("aria-expanded", "false");
-    nav.classList.remove("open");
-  }));
+  const setMenu = (open) => {
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "メニューを閉じる" : "メニューを開く");
+    nav.classList.toggle("open", open);
+  };
+  toggle.addEventListener("click", () => setMenu(toggle.getAttribute("aria-expanded") !== "true"));
+  nav.querySelectorAll("a").forEach((l) => l.addEventListener("click", () => setMenu(false)));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") setMenu(false); });
 
-  /* スクロールでヘッダーに線 */
+  /* スクロール：ヘッダーの線＋今いるセクションをメニューで示す */
   const header = document.querySelector(".site-header");
-  const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 10);
-  window.addEventListener("scroll", onScroll, { passive: true });
+  const navLinks = [...nav.querySelectorAll('a[href^="#"]')];
+  const sections = navLinks.map((l) => document.querySelector(l.getAttribute("href"))).filter(Boolean);
+  let ticking = false;
+  const onScroll = () => {
+    ticking = false;
+    header.classList.toggle("scrolled", window.scrollY > 10);
+    const line = header.getBoundingClientRect().bottom + window.innerHeight * 0.3;
+    let current = null;
+    sections.forEach((s) => { if (s.getBoundingClientRect().top <= line) current = s; });
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) current = sections[sections.length - 1];
+    navLinks.forEach((l) => {
+      const on = current && l.getAttribute("href") === "#" + current.id;
+      l.classList.toggle("is-current", !!on);
+      if (on) l.setAttribute("aria-current", "true"); else l.removeAttribute("aria-current");
+    });
+  };
+  window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  window.addEventListener("resize", onScroll);
   onScroll();
 
   /* ふわっと表示 */
