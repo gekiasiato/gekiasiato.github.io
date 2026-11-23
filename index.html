@@ -29,7 +29,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Archivo:wght@500;700;800&display=swap" rel="stylesheet">
   <!-- style.css / script.js を書き換えたら、このファイル内3か所の ?v=〇〇〇〇 を同じ新しい日付に変える
        （見る人のブラウザに古いデザインが残るのを防ぐため。content.js だけの更新なら変えなくてOK） -->
-  <link rel="stylesheet" href="style.css?v=20261123">
+  <link rel="stylesheet" href="style.css?v=20261124">
 </head>
 <body>
   <!--
@@ -37,7 +37,8 @@
        （各セクションの見出しだけは、このファイルの <h2>〜</h2> を書き換えます）
   -->
 
-  <header class="site-header" id="top">
+  <!-- ※ id="top" はどこにも付けない（付けると「Page Top」が効かなくなる。#top だけでページ先頭に戻る） -->
+  <header class="site-header">
     <a href="#top" class="brand">
       <img src="images/logo.webp" alt="" width="40" height="40">
       <span class="brand-text"><small>鳥取大学演劇サークル</small>劇団あしあと</span>
@@ -178,7 +179,7 @@
     </div>
   </footer>
 
-  <script src="content.js?v=20261123"></script>
-  <script src="script.js?v=20261123"></script>
+  <script src="content.js?v=20261124"></script>
+  <script src="script.js?v=20261124"></script>
 </body>
 </html>

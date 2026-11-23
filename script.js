@@ -157,16 +157,24 @@
   /* お問い合わせ・フッターのSNS */
   const c = S.contact || {};
   const links = [];
-  if (c.instagram && c.instagram.url) links.push({ href: c.instagram.url, name: "Instagram", sub: c.instagram.id, out: true });
-  if (c.x && c.x.url) links.push({ href: c.x.url, name: "X", sub: c.x.id, out: true });
-  if (c.note && c.note.url) links.push({ href: c.note.url, name: "note", sub: c.note.id, out: true });
-  if (c.email) links.push({ href: `mailto:${c.email}`, name: "Mail", sub: c.email, out: false });
+  /* SNSアイコン（文字色と同じ色で表示される） */
+  const svg = (inner) => `<svg class="sns-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${inner}</svg>`;
+  const icons = {
+    instagram: svg(`<rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/>`),
+    x: svg(`<path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>`),
+    note: svg(`<path d="M6 19V8.8A2.8 2.8 0 0 1 8.8 6h6.4A2.8 2.8 0 0 1 18 8.8V19" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>`),
+    mail: svg(`<rect x="2.5" y="5" width="19" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>`),
+  };
+  if (c.instagram && c.instagram.url) links.push({ href: c.instagram.url, name: "Instagram", sub: c.instagram.id, out: true, icon: icons.instagram });
+  if (c.x && c.x.url) links.push({ href: c.x.url, name: "X", sub: c.x.id, out: true, icon: icons.x });
+  if (c.note && c.note.url) links.push({ href: c.note.url, name: "note", sub: c.note.id, out: true, icon: icons.note });
+  if (c.email) links.push({ href: `mailto:${c.email}`, name: "Mail", sub: c.email, out: false, icon: icons.mail });
   $("contact-grid").innerHTML = links.map((l) => `
     <li class="reveal"><a href="${l.href}" ${l.out ? ext : ""}>
-      <span class="ct-name">${l.name}</span><span class="ct-id">${l.sub}</span><span class="ct-arrow" aria-hidden="true">${l.out ? "↗" : "→"}</span>
+      <span class="ct-name">${l.icon}${l.name}</span><span class="ct-id">${l.sub}</span><span class="ct-arrow" aria-hidden="true">${l.out ? "↗" : "→"}</span>
     </a></li>`).join("");
   $("footer-sns").innerHTML = links.map((l) => `
-    <li><a href="${l.href}" ${l.out ? ext : ""}>${l.name}</a></li>`).join("");
+    <li><a href="${l.href}" ${l.out ? ext : ""}>${l.icon}<span>${l.name}</span></a></li>`).join("");
 
   $("year").textContent = new Date().getFullYear();
 
