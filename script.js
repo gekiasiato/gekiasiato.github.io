@@ -86,10 +86,16 @@
 
     /* トップの「次回公演」バナー */
     const hn = $("hero-next");
+    const first = (s) => (s || "").split("<br>")[0];
     hn.innerHTML = `
-      ${ns.flyer ? `<img src="images/${ns.flyer}" alt="">` : ""}
-      <span class="hn-text"><small>Next Stage — ${ns.type || ""}</small><strong>${ns.title || ""}</strong><em>${(ns.date || "").split("<br>")[0]}</em></span>
-      <span class="hn-arrow" aria-hidden="true">→</span>`;
+      ${ns.flyer ? `<span class="hn-thumb"><img src="images/${ns.flyer}" alt=""></span>` : ""}
+      <span class="hn-text">
+        <span class="hn-label">Next Stage</span>
+        <small>${ns.type || ""}</small>
+        <strong>${ns.title || ""}</strong>
+        <em>${first(ns.date)}${ns.place ? `<span class="hn-sep">／</span><span class="hn-place">${first(ns.place)}</span>` : ""}</em>
+      </span>
+      <span class="hn-cta">${ns.reserveUrl ? "公演情報・ご予約" : "公演情報を見る"}<span aria-hidden="true">→</span></span>`;
     hn.hidden = false;
   } else {
     $("next-stage").innerHTML = `
