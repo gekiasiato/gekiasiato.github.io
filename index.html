@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>鳥取大学演劇サークル 劇団あしあと</title>
+  <meta name="description" content="鳥取大学の演劇サークル「劇団あしあと」の公式ホームページです。公演情報・活動紹介・新入部員募集。">
+  <meta property="og:title" content="鳥取大学演劇サークル 劇団あしあと">
+  <meta property="og:description" content="舞台の上に、わたしたちの足あとを。鳥取大学の演劇サークルです。">
+  <meta property="og:image" content="images/logo.webp">
+  <link rel="icon" href="images/logo.webp" type="image/webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Archivo:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!--
+    ※ 文章の更新は content.js で行います。このファイルは基本的に触らなくて大丈夫です。
+  -->
+
+  <header class="site-header" id="top">
+    <a href="#top" class="brand">
+      <img src="images/logo.webp" alt="" width="40" height="40">
+      <span class="brand-text"><small>鳥取大学演劇サークル</small>劇団あしあと</span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="メニューを開く">
+      <span></span><span></span>
+    </button>
+    <nav class="site-nav" id="nav">
+      <a href="#about">About</a>
+      <a href="#stage">Stage</a>
+      <a href="#news">News</a>
+      <a href="#activity">Activity</a>
+      <a href="#join">Join</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ===== ヒーロー ===== -->
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="hero-kicker">Tottori University Theater Club</p>
+          <h1>
+            <span class="h1-small">鳥取大学演劇サークル</span>
+            <span class="h1-main">劇団あしあと</span>
+          </h1>
+          <p class="hero-lead" data-bind="catchCopy"></p>
+          <div class="hero-actions">
+            <a href="#stage" class="btn btn-primary">次回公演</a>
+            <a href="#join" class="btn btn-line">入団案内</a>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="halftone"></div>
+          <img src="images/logo.webp" alt="" width="420" height="420">
+        </div>
+      </div>
+      <a class="hero-next" id="hero-next" href="#stage" hidden></a>
+      <svg class="footsteps" viewBox="0 0 1200 120" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <defs>
+          <g id="foot">
+            <ellipse cx="0" cy="8" rx="9" ry="13"/>
+            <circle cx="-7" cy="-11" r="3"/>
+            <circle cx="-1" cy="-14" r="3.2"/>
+            <circle cx="5" cy="-12" r="2.8"/>
+            <circle cx="9" cy="-7" r="2.4"/>
+          </g>
+        </defs>
+        <g id="footsteps-trail"></g>
+      </svg>
+    </section>
+
+    <!-- ===== 劇団について ===== -->
+    <section class="section" id="about">
+      <div class="container">
+        <header class="sec-head"><span class="sec-no">01</span><p class="sec-en">About</p><h2>劇団あしあとについて</h2></header>
+        <div class="about-grid">
+          <div class="about-text reveal" id="about-text"></div>
+          <ol class="about-points reveal" id="about-points"></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 公演情報 ===== -->
+    <section class="section section-stage" id="stage">
+      <div class="container">
+        <header class="sec-head"><span class="sec-no">02</span><p class="sec-en">Next Stage</p><h2>次回公演</h2></header>
+        <div id="next-stage"></div>
+        <h3 class="sub-title">過去の公演</h3>
+        <ul class="past-list" id="past-list"></ul>
+      </div>
+    </section>
+
+    <!-- ===== お知らせ ===== -->
+    <section class="section" id="news">
+      <div class="container">
+        <header class="sec-head"><span class="sec-no">03</span><p class="sec-en">News</p><h2>お知らせ</h2></header>
+        <ul class="news-list" id="news-list"></ul>
+      </div>
+    </section>
+
+    <!-- ===== 活動内容 ===== -->
+    <section class="section section-paper" id="activity">
+      <div class="container">
+        <header class="sec-head"><span class="sec-no">04</span><p class="sec-en">Activity</p><h2>活動内容</h2></header>
+        <dl class="activity-basic reveal" id="activity-basic"></dl>
+        <h3 class="sub-title">1年の流れ</h3>
+        <ol class="timeline" id="timeline"></ol>
+      </div>
+    </section>
+
+    <!-- ===== 入団案内 ===== -->
+    <section class="section join" id="join">
+      <div class="container">
+        <header class="sec-head"><span class="sec-no">05</span><p class="sec-en">Join Us</p><h2>一緒に足あとを<br class="sp">残しませんか？</h2></header>
+        <div class="join-grid">
+          <div class="join-text reveal">
+            <p data-bind="join.message"></p>
+            <a href="#contact" class="btn btn-primary" id="join-btn">見学・体験を申し込む</a>
+          </div>
+          <dl class="join-faq reveal" id="join-faq"></dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== お問い合わせ ===== -->
+    <section class="section section-paper" id="contact">
+      <div class="container">
+        <header class="sec-head"><span class="sec-no">06</span><p class="sec-en">Contact</p><h2>お問い合わせ</h2></header>
+        <div class="contact-wrap">
+          <p class="contact-lead">公演・見学・入団などのお問い合わせは、<br>SNSのDMまたはメールでお気軽にどうぞ。</p>
+          <ul class="contact-list" id="contact-grid"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="images/logo.webp" alt="" width="56" height="56">
+        <p><small>鳥取大学演劇サークル</small>劇団あしあと</p>
+      </div>
+      <p class="footer-copy">&copy; <span id="year"></span> Gekidan Ashiato — Tottori University Theater Club</p>
+      <a href="#top" class="to-top">Page Top ↑</a>
+    </div>
+  </footer>
+
+  <script src="content.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
