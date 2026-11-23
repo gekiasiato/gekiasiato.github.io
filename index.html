@@ -4,11 +4,26 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>鳥取大学演劇サークル 劇団あしあと</title>
-  <meta name="description" content="鳥取大学の演劇サークル「劇団あしあと」の公式ホームページです。公演情報・活動紹介・新入部員募集。">
+  <meta name="description" content="鳥取大学の演劇サークル「劇団あしあと」の公式ホームページです。公演情報・活動紹介・新入団員募集。">
+
+  <!-- SNSでシェアされたときの表示（URLが変わったら https://gekiasiato.github.io/ の部分を書き換える） -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="劇団あしあと">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:url" content="https://gekiasiato.github.io/">
   <meta property="og:title" content="鳥取大学演劇サークル 劇団あしあと">
-  <meta property="og:description" content="舞台の上に、わたしたちの足あとを。鳥取大学の演劇サークルです。">
-  <meta property="og:image" content="images/logo.webp">
+  <meta property="og:description" content="舞台の上に、わたしたちのあしあとを。鳥取大学の演劇サークルです。">
+  <meta property="og:image" content="https://gekiasiato.github.io/images/ogp.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="鳥取大学演劇サークル 劇団あしあと">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@gekiasi">
+
+  <link rel="icon" href="images/favicon.png" sizes="32x32" type="image/png">
   <link rel="icon" href="images/logo.webp" type="image/webp">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Archivo:wght@500;700;800&display=swap" rel="stylesheet">
@@ -16,7 +31,8 @@
 </head>
 <body>
   <!--
-    ※ 文章の更新は content.js で行います。このファイルは基本的に触らなくて大丈夫です。
+    ※ 文章・写真の更新は content.js で行います。このファイルは基本的に触らなくて大丈夫です。
+       （各セクションの見出しだけは、このファイルの <h2>〜</h2> を書き換えます）
   -->
 
   <header class="site-header" id="top">
@@ -27,13 +43,13 @@
     <button class="nav-toggle" aria-expanded="false" aria-controls="nav" aria-label="メニューを開く">
       <span></span><span></span>
     </button>
-    <nav class="site-nav" id="nav">
-      <a href="#about">About</a>
-      <a href="#stage">Stage</a>
-      <a href="#news">News</a>
-      <a href="#activity">Activity</a>
-      <a href="#join">Join</a>
-      <a href="#contact">Contact</a>
+    <nav class="site-nav" id="nav" aria-label="メインメニュー">
+      <a href="#about"><span class="en">About</span><span class="ja">劇団について</span></a>
+      <a href="#stage"><span class="en">Stage</span><span class="ja">公演情報</span></a>
+      <a href="#news"><span class="en">News</span><span class="ja">お知らせ</span></a>
+      <a href="#activity"><span class="en">Activity</span><span class="ja">活動内容</span></a>
+      <a href="#join"><span class="en">Join</span><span class="ja">入団案内</span></a>
+      <a href="#contact"><span class="en">Contact</span><span class="ja">お問い合わせ</span></a>
     </nav>
   </header>
 
@@ -49,11 +65,11 @@
           </h1>
           <p class="hero-lead" data-bind="catchCopy"></p>
           <div class="hero-actions">
-            <a href="#stage" class="btn btn-primary">次回公演</a>
+            <a href="#stage" class="btn btn-primary btn-next">次回公演</a>
             <a href="#join" class="btn btn-line">入団案内</a>
           </div>
         </div>
-        <div class="hero-visual" aria-hidden="true">
+        <div class="hero-visual" id="hero-visual" aria-hidden="true">
           <div class="halftone"></div>
           <img src="images/logo.webp" alt="" width="420" height="420">
         </div>
@@ -74,7 +90,7 @@
     </section>
 
     <!-- ===== 劇団について ===== -->
-    <section class="section" id="about">
+    <section class="section section-about" id="about">
       <div class="container">
         <header class="sec-head"><span class="sec-no">01</span><p class="sec-en">About</p><h2>劇団あしあとについて</h2></header>
         <div class="about-grid">
@@ -89,8 +105,10 @@
       <div class="container">
         <header class="sec-head"><span class="sec-no">02</span><p class="sec-en">Next Stage</p><h2>次回公演</h2></header>
         <div id="next-stage"></div>
-        <h3 class="sub-title">過去の公演</h3>
-        <ul class="past-list" id="past-list"></ul>
+        <div id="past" hidden>
+          <h3 class="sub-title">過去の公演</h3>
+          <ul class="past-list" id="past-list"></ul>
+        </div>
       </div>
     </section>
 
@@ -119,7 +137,7 @@
         <div class="join-grid">
           <div class="join-text reveal">
             <p data-bind="join.message"></p>
-            <a href="#contact" class="btn btn-primary" id="join-btn">見学・体験を申し込む</a>
+            <div class="join-actions" id="join-actions"></div>
           </div>
           <dl class="join-faq reveal" id="join-faq"></dl>
         </div>
@@ -144,8 +162,17 @@
         <img src="images/logo.webp" alt="" width="56" height="56">
         <p><small>鳥取大学演劇サークル</small>劇団あしあと</p>
       </div>
-      <p class="footer-copy">&copy; <span id="year"></span> Gekidan Ashiato — Tottori University Theater Club</p>
       <a href="#top" class="to-top">Page Top ↑</a>
+      <nav class="footer-nav" aria-label="フッターメニュー">
+        <a href="#about">劇団について</a>
+        <a href="#stage">公演情報</a>
+        <a href="#news">お知らせ</a>
+        <a href="#activity">活動内容</a>
+        <a href="#join">入団案内</a>
+        <a href="#contact">お問い合わせ</a>
+      </nav>
+      <ul class="footer-sns" id="footer-sns" aria-label="SNS"></ul>
+      <p class="footer-copy">&copy; <span id="year"></span> Gekidan Ashiato — Tottori University Theater Club</p>
     </div>
   </footer>
 
