@@ -26,7 +26,7 @@ const SITE = {
      true  … 団員確認用。ページ上部に「公開前の確認用ページです」と表示し、
              Google などの検索結果に出ないようにします。
      false … 本公開。確認が終わったら false に変えてください。          */
-  previewMode: true,
+  previewMode: false,
 
   /* ---------- 基本情報 ---------- */
   catchCopy: "舞台の上に、<br class=\"sp\">わたしたちのあしあとを。",
