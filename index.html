@@ -29,7 +29,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Archivo:wght@500;700;800&display=swap" rel="stylesheet">
   <!-- style.css / script.js を書き換えたら、このファイル内3か所の ?v=〇〇〇〇 を同じ新しい日付に変える
        （見る人のブラウザに古いデザインが残るのを防ぐため。content.js だけの更新なら変えなくてOK） -->
-  <link rel="stylesheet" href="style.css?v=20261124">
+  <link rel="stylesheet" href="style.css?v=20261126">
 </head>
 <body>
   <!--
@@ -54,11 +54,16 @@
       <a href="#join"><span class="en">Join</span><span class="ja">入団案内</span></a>
       <a href="#contact"><span class="en">Contact</span><span class="ja">お問い合わせ</span></a>
     </nav>
+    <div class="progress" id="progress" aria-hidden="true"></div>
   </header>
 
   <main>
     <!-- ===== ヒーロー ===== -->
     <section class="hero">
+      <!-- 背景の演出（飾りなので読み上げなし） -->
+      <div class="hero-bg" aria-hidden="true">
+        <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+      </div>
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="hero-kicker">Tottori University Theater Club</p>
@@ -93,9 +98,9 @@
     </section>
 
     <!-- ===== 劇団について ===== -->
-    <section class="section section-about" id="about">
+    <section class="section section-about" id="about" data-word="About">
       <div class="container">
-        <header class="sec-head"><span class="sec-no">01</span><p class="sec-en">About</p><h2>劇団あしあとについて</h2></header>
+        <header class="sec-head reveal"><span class="sec-no">01</span><p class="sec-en">About</p><h2>劇団あしあとについて</h2></header>
         <div class="about-grid">
           <div class="about-text reveal" id="about-text"></div>
           <ol class="about-points reveal" id="about-points"></ol>
@@ -106,7 +111,7 @@
     <!-- ===== 公演情報 ===== -->
     <section class="section section-stage" id="stage">
       <div class="container">
-        <header class="sec-head"><span class="sec-no">02</span><p class="sec-en">Next Stage</p><h2>次回公演</h2></header>
+        <header class="sec-head reveal"><span class="sec-no">02</span><p class="sec-en">Next Stage</p><h2>次回公演</h2></header>
         <div id="next-stage"></div>
         <div id="past" hidden>
           <h3 class="sub-title">過去の公演</h3>
@@ -116,17 +121,17 @@
     </section>
 
     <!-- ===== お知らせ ===== -->
-    <section class="section" id="news">
+    <section class="section section-news" id="news" data-word="News">
       <div class="container">
-        <header class="sec-head"><span class="sec-no">03</span><p class="sec-en">News</p><h2>お知らせ</h2></header>
+        <header class="sec-head reveal"><span class="sec-no">03</span><p class="sec-en">News</p><h2>お知らせ</h2></header>
         <ul class="news-list" id="news-list"></ul>
       </div>
     </section>
 
     <!-- ===== 活動内容 ===== -->
-    <section class="section section-paper" id="activity">
+    <section class="section section-paper" id="activity" data-word="Activity">
       <div class="container">
-        <header class="sec-head"><span class="sec-no">04</span><p class="sec-en">Activity</p><h2>活動内容</h2></header>
+        <header class="sec-head reveal"><span class="sec-no">04</span><p class="sec-en">Activity</p><h2>活動内容</h2></header>
         <dl class="activity-basic reveal" id="activity-basic"></dl>
         <h3 class="sub-title">1年の流れ</h3>
         <ol class="timeline" id="timeline"></ol>
@@ -134,9 +139,9 @@
     </section>
 
     <!-- ===== 入団案内 ===== -->
-    <section class="section join" id="join">
+    <section class="section join" id="join" data-word="Join">
       <div class="container">
-        <header class="sec-head"><span class="sec-no">05</span><p class="sec-en">Join Us</p><h2>一緒にあしあとを<br class="sp">残しませんか？</h2></header>
+        <header class="sec-head reveal"><span class="sec-no">05</span><p class="sec-en">Join Us</p><h2>一緒にあしあとを<br class="sp">残しませんか？</h2></header>
         <div class="join-grid">
           <div class="join-text reveal">
             <p data-bind="join.message"></p>
@@ -148,9 +153,9 @@
     </section>
 
     <!-- ===== お問い合わせ ===== -->
-    <section class="section section-paper" id="contact">
+    <section class="section section-paper" id="contact" data-word="Contact">
       <div class="container">
-        <header class="sec-head"><span class="sec-no">06</span><p class="sec-en">Contact</p><h2>お問い合わせ</h2></header>
+        <header class="sec-head reveal"><span class="sec-no">06</span><p class="sec-en">Contact</p><h2>お問い合わせ</h2></header>
         <div class="contact-wrap">
           <p class="contact-lead">公演・見学・入団などのお問い合わせは、<br>SNSのDMまたはメールでお気軽にどうぞ。</p>
           <ul class="contact-list" id="contact-grid"></ul>
@@ -179,7 +184,7 @@
     </div>
   </footer>
 
-  <script src="content.js?v=20261124"></script>
-  <script src="script.js?v=20261124"></script>
+  <script src="content.js?v=20261126"></script>
+  <script src="script.js?v=20261126"></script>
 </body>
 </html>
