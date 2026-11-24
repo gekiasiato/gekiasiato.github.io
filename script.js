@@ -19,6 +19,7 @@
   const pad = (n) => String(n).padStart(2, "0");
   const DOTS = ["var(--c-green)", "var(--c-yellow)", "var(--c-orange)", "var(--c-pink)", "var(--c-sky)"];
   const ext = 'target="_blank" rel="noopener"';
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* 確認モード：検索エンジンに載せない＋上部に案内を表示 */
   if (S.previewMode) {
@@ -180,6 +181,28 @@
 
   /* ---------- 演出・操作 ---------- */
 
+  /* タイトルを1文字ずつ登場させる */
+  const hm = document.querySelector(".h1-main");
+  if (hm && !reduce) {
+    const txt = hm.textContent.trim();
+    hm.setAttribute("aria-label", txt);
+    hm.innerHTML = [...txt].map((ch, i) => `<span class="char" aria-hidden="true" style="--i:${i}">${ch}</span>`).join("");
+  }
+
+  /* ロゴのまわりをただようカラフルな玉（トップが写真のときは出さない） */
+  const hv0 = $("hero-visual");
+  if (hv0 && !S.heroPhoto && !reduce) {
+    const orbs = [[8, 18, 14], [92, 30, 18], [86, 80, 12], [14, 78, 20], [48, 3, 12], [70, 94, 16]];
+    hv0.insertAdjacentHTML("beforeend", orbs.map(([x, y, s], i) =>
+      `<i class="orb" style="--x:${x}%;--y:${y}%;--s:${s}px;--c:${DOTS[i % DOTS.length]};--t:${(4 + (i % 3) * 1.5).toFixed(1)}s;--d:${(-i * 0.7).toFixed(1)}s;--dx:${i % 2 ? 14 : -14}px;--dy:${i % 3 ? -16 : 16}px"></i>`).join(""));
+  }
+
+  /* リストの項目は、順番にずらして表示 */
+  [".about-points li", ".join-faq div", ".activity-basic div"].forEach((sel) =>
+    document.querySelectorAll(sel).forEach((el) => el.classList.add("reveal")));
+  [".about-points li", ".join-faq div", ".activity-basic div", ".news-list li", ".timeline li", ".contact-list li", ".past-list li"].forEach((sel) =>
+    document.querySelectorAll(sel).forEach((el, i) => el.style.setProperty("--d", (Math.min(i, 6) * 0.09).toFixed(2) + "s")));
+
   /* 歩くあしあと */
   const trail = $("footsteps-trail");
   if (trail) {
@@ -207,10 +230,25 @@
   const header = document.querySelector(".site-header");
   const navLinks = [...nav.querySelectorAll('a[href^="#"]')];
   const sections = navLinks.map((l) => document.querySelector(l.getAttribute("href"))).filter(Boolean);
+  const blobs = [...document.querySelectorAll(".blob")];
+  const words = [...document.querySelectorAll("[data-word]")];
   let ticking = false;
   const onScroll = () => {
     ticking = false;
     header.classList.toggle("scrolled", window.scrollY > 10);
+    /* スクロールの進み具合の線 */
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    header.style.setProperty("--p", max > 0 ? (window.scrollY / max).toFixed(4) : "0");
+    /* 背景がゆっくり遅れて動く（視差） */
+    if (!reduce) {
+      const y = window.scrollY;
+      blobs.forEach((b, i) => b.style.setProperty("--py", (y * (0.06 + 0.04 * i)).toFixed(1)));
+      words.forEach((w) => {
+        const r = w.getBoundingClientRect();
+        /* 下方向に最大30pxだけ動かす（上や横に動かすと見切れるため） */
+        if (r.bottom > 0 && r.top < window.innerHeight) w.style.setProperty("--py", Math.min(30, Math.max(0, -r.top * 0.05)).toFixed(1));
+      });
+    }
     const line = header.getBoundingClientRect().bottom + window.innerHeight * 0.3;
     let current = null;
     sections.forEach((s) => { if (s.getBoundingClientRect().top <= line) current = s; });
